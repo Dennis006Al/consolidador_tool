@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 from io import BytesIO
@@ -6,10 +7,8 @@ from openpyxl import load_workbook
 from openpyxl.utils.dataframe import dataframe_to_rows
 
 # ================= RUTAS =================
-PLANTILLA_PATH = "C:/Users/denni/OneDrive/Escritorio/consolidador_tool/Inventarios/PLANTILLAS/plantilla_base.xlsm"
-# Ruta opcional para ejemplo
-EJEMPLO_PATH = "C:/Users/denni/OneDrive/Escritorio/consolidador_tool/Inventarios/PLANTILLAS/ejemplo.xlsm"
-
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PLANTILLA_PATH = os.path.join(BASE_DIR, "Inventarios", "PLANTILLAS", "plantilla_base_formato_cliente.xlsm")
 # ================= CONFIGURACIÓN =================
 st.set_page_config(page_title="Consolidador de Inventarios", page_icon="🧾", layout="centered")
 st.title("Consolidador de Inventarios por Marca")
@@ -36,23 +35,18 @@ with col2:
     st.download_button(
         label="📥 Plantilla oficial",
         data=plantilla_bytes,
-        file_name="plantilla_base_formato_cliente.xlsm",
+        file_name="plantilla_base.xlsm",
         mime="application/vnd.ms-excel.sheet.macroEnabled.12"
     )
 
-    # Botón ejemplo (opcional)
-    try:
-        with open(EJEMPLO_PATH, "rb") as f:
-            ejemplo_bytes = f.read()
-        st.download_button(
-            label="📄 Ejemplo lleno",
-            data=ejemplo_bytes,
-            file_name="plantilla_ejemplo.xlsm",
-            mime="application/vnd.ms-excel.sheet.macroEnabled.12"
-        )
-    except FileNotFoundError:
-        st.write("")
-
+    with open(PLANTILLA_PATH, "rb") as f:
+        plantilla_bytes = f.read()
+    st.download_button(
+        label="📥 Plantilla clientes",
+        data=plantilla_bytes,
+        file_name="plantilla_base_formato_cliente.xlsm",
+        mime="application/vnd.ms-excel.sheet.macroEnabled.12"
+    )
 # ================= REINICIO =================
 if "file_uploader_key" not in st.session_state:
     st.session_state["file_uploader_key"] = "initial"
